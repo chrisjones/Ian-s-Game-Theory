@@ -9,6 +9,8 @@ class Game
     choices, pick = [1, 2, 3, 4], @total + 1
 	if @total <= 4
 	  pick = @total
+	elsif @total.modulo(5) != 0
+	  pick = @total.modulo(5)
 	else
       while !valid_pick?(pick)
         pick = choices[rand(choices.length)]
