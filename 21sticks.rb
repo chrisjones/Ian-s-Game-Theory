@@ -7,9 +7,13 @@ class Game
   
   def get_computer_number
     choices, pick = [1, 2, 3, 4], @total + 1
-    while !valid_pick?(pick)
-      pick = choices[rand(choices.length)]
-    end
+	if @total <= 4
+	  pick = @total
+	else
+      while !valid_pick?(pick)
+        pick = choices[rand(choices.length)]
+      end
+	end
     return pick
   end
   
