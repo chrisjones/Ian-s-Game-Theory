@@ -5,16 +5,27 @@ class Game
     play_game
   end
   
+  def choose_first_player
+    pool = [1,2,3,4,5,6,7,8,9,10]
+	pick_num = pool[rand(pool.length)]
+	if pick_num.modulo(2) == 0 
+	  @player_turn = true 
+	  @character = "player"
+	else
+	  @player_turn = false
+	  @character = "computer"
+	end
+	puts "\nThe #{@character} was randomly selected to go first.\n"
+  end
+  
   def get_computer_number
-    choices, pick = [1, 2, 3, 4], @total + 1
+    choices = [1, 2, 3, 4]
 	if @total <= 4
 	  pick = @total
 	elsif @total.modulo(5) != 0
 	  pick = @total.modulo(5)
 	else
-      while !valid_pick?(pick)
-        pick = choices[rand(choices.length)]
-      end
+      pick = choices[rand(choices.length)]
 	end
     return pick
   end
@@ -29,25 +40,26 @@ class Game
   end
 
   def play_game
-    player_turn = true
+    choose_first_player
     while not end_of_game?
-      player_pick = get_player_number
-      if player_pick >= 1 && player_pick <= 4
-        if valid_pick?(player_pick)
-          @total -= player_pick
-          puts "You chose #{player_pick} #{plural!(player_pick)}. #{@total} #{plural!(@total)} remaining."
-          end_of_game? ? puts("Congratulations, you win!") : player_turn = false
+	  if @player_turn
+        player_pick = get_player_number
+        if player_pick >= 1 && player_pick <= 4
+          if valid_pick?(player_pick)
+            @total -= player_pick
+            puts "You chose #{player_pick} #{plural!(player_pick)}. #{@total} #{plural!(@total)} remaining."
+            end_of_game? ? puts("Congratulations, you win!") : @player_turn = false
+          else
+            puts "There are not that many sticks left. #{@total} sticks left."
+          end
         else
-          puts "There are not that many sticks left. #{@total} sticks left."
+          puts "\nYou chose an invalid number. Please pick again."
         end
-      else
-        puts "\nYou chose an invalid number. Please pick again."
-      end
-      if !player_turn
+      else  #computer turn
         computer_pick = get_computer_number
         @total -= computer_pick
         puts "Computer chose #{computer_pick} #{plural!(computer_pick)}. #{@total} #{plural!(@total)} remaining."
-        end_of_game? ? puts("So sorry, computer wins. Better luck next time.") : player_turn = true
+        end_of_game? ? puts("So sorry, computer wins. Better luck next time.") : @player_turn = true
       end
     end
   end
